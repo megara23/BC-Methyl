@@ -1,7 +1,4 @@
-library(shiny)
-library(GEOquery)
-GSE37817 = getGEO("GSE37817")
-GSE37817.expr = exprs(GSE37817[[1]])
+load("C:/Users/Windows User/Desktop/BCBET-M_edited/GSE37817.RData")
 choices = c("red", "green", "blue", "purple", "orange")
 shinyUI(
   fluidPage(
