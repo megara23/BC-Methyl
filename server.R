@@ -1,12 +1,7 @@
-library(shiny)
-library(GEOquery)
-GSE37817 = getGEO("GSE37817")
-GSE37817.expr = exprs(GSE37817[[1]])
-
-GSE37817.p = pData(GSE37817[[1]])
-y = rep(NA, length(GSE37817.p$title))
-y[grep("Control", GSE37817.p$title)] = "Control"
-y[grep("Primary", GSE37817.p$title)] = "BladderCancer"
+load("C:/Users/Windows User/Desktop/BCBET-M_edited/GSE37817.RData")
+y = rep(NA, length(GSE37817.p.expr$title))
+y[grep("Control", GSE37817.p.expr$title)] = "Control"
+y[grep("Primary", GSE37817.p.expr$title)] = "BladderCancer"
 disorder = as.character(y)
 table(disorder)
 
