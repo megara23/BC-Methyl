@@ -12,4 +12,8 @@ if (!samples.match) {
   stop("need to match samples")
 }
 
-save(GSE28094.meth, GSE28094.meth.p, file = "GSE28094.RData")
+tmp = rep(NA, nrow(GSE28094.meth.p))
+tmp[GSE28094.meth.p[,8] == "bladder tumor tissue"] = 1
+tmp[GSE28094.meth.p[,8] == "bladder normal tissue"]= 0
+GSE28094.methyl.tumor = tmp
+save(GSE28094.meth, GSE28094.meth.p, GSE28094.methyl.tumor, file = "GSE28094.RData")
