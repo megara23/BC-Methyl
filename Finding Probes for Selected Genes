@@ -1,8 +1,8 @@
+library(GEOquery)
 ## methylation datasets
 load("C:/Users/Windows User/Desktop/MethylMix/GSE37817.RData")
 load("C:/Users/Windows User/Desktop/MethylMix/GSE33510.RData")
 load("C:/Users/Windows User/Desktop/MethylMix/GSE28094.RData")
-
 ## methylation platforms
 load("C:/Users/Windows User/Desktop/MethylMix/GPL8490.RData")
 load("C:/Users/Windows User/Desktop/MethylMix/GPL9183.RData")
@@ -17,6 +17,7 @@ getgene = function()
 }
 
 gene = getgene() #Enter gene
+gene = paste0("^",gene,"$")
 matching = grep(gene, GPLmeth$Symbol) #Match gene to gene name in platform data
 findprobe = GPLmeth$ID[matching] #Find probe(s) for gene
 find = match(findprobe, rownames(GSE33510.meth)) #Match probe(s) to row(s) in patient dataset
