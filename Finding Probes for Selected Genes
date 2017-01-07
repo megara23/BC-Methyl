@@ -17,9 +17,7 @@ getgene = function()
 }
 
 gene = getgene() #Enter gene
-matching = grep(gene, GPLmeth$Synonym) #Match gene to gene name in platform data
-matching2 = grep(gene, GPLmeth$Symbol) #More gene names
-matching = append(matching, matching2, after=length(matching)) #Get the total list of names
+matching = grep(gene, GPLmeth$Symbol) #Match gene to gene name in platform data
 findprobe = GPLmeth$ID[matching] #Find probe(s) for gene
 find = match(findprobe, rownames(GSE33510.meth)) #Match probe(s) to row(s) in patient dataset
 
@@ -69,8 +67,6 @@ min(newvector) #Lowest p-value
 #Since we are working with different platform data, the probes will be different
 #Therefore, we must find the probes differently for the GoldenGate Platform
 findgene = grep(gene, GPLmeth2$Symbol)
-findgene2 = grep(gene, GPLmeth2$Synonym)
-findgene = append(findgene, findgene2, after=length(findgene))
 matchgene = GPLmeth2$ID[findgene]
 findagain = match(matchgene, rownames(GSE28094.meth))
 
