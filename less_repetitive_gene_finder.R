@@ -39,6 +39,18 @@ getset = function()
   }
 }
 
+getset2 = function() {
+  if (platform == "GSE33510" || platform == "GSE37817"){
+    return (GPLmeth)
+  }
+
+else if (platform == "GSE28094"){
+  return (GPLmeth2)
+}
+else{
+  return ("Not a valid dataset")
+}
+}
 gettumornorm = function(){
   if (platform == "GSE33510"){
     return (GSE33510.meth.tumor_normal)
@@ -58,36 +70,16 @@ gene = getgene() #Enter gene
 gene = paste0("^",gene,"$") 
 platform = getplatform()
 set = getset()
-matching = grep(gene, GPLmeth$Symbol) #Match gene to gene name in platform data
-findprobe = GPLmeth$ID[matching] #Find probe(s) for gene
-find = match(findprobe, rownames(GSE33510.meth)) #Match probe(s) to row(s) in patient dataset
-
-#Since we are working with different platform data, the probes will be different
-#Therefore, we must find the probes differently for the GoldenGate Platform
-findgene = grep(gene, GPLmeth2$Symbol)
-matchgene = GPLmeth2$ID[findgene]
-findagain = match(matchgene, rownames(GSE28094.meth))
-
-platform_rownames = rownames(set)
-
-pickone = function(){
-  if (platform_rownames[1] == "AATK_E63_R"){
-    return (findagain)
-  }
-  else if (platform_rownames[1] == "cg00000292"){
-    return(find)
-  }
-  else {
-    return ("error")
-  }
-}
-matched = pickone()
+set2 = getset2()
+matching = grep(gene, set2$Symbol) #Match gene to gene name in platform data
+findprobe = set2$ID[matching] #Find probe(s) for gene
+find = match(findprobe, rownames(set)) #Match probe(s) to row(s) in patient dataset
 
 findbestprobe = function(){
   newvector = c(1)
   i = 1
-  for (i in 1:length(matched)) {
-    m = matched[i]
+  for (i in 1:length(find)) {
+    m = find[i]
     s = split(set[m,], gettumornorm())
     boxplot(s, main = "Methylation", col = c("purple", "pink"), ylab = "Probe Expression")
     means = lapply(s, mean)
