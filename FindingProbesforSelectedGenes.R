@@ -1,11 +1,11 @@
 library(GEOquery)
 ## methylation datasets
-load("C:/Users/Windows User/Desktop/MethylMix/GSE37817.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GSE33510.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GSE28094.RData")
+load("data/GSE37817.RData")
+load("data/GSE33510.RData")
+load("data/GSE28094.RData")
 ## methylation platforms
-load("C:/Users/Windows User/Desktop/MethylMix/GPL8490.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GPL9183.RData")
+load("data/GPL8490.RData")
+load("data/GPL9183.RData")
 
 GPLmeth = Table(GPLmeth) #Illumina HumanMethylation27 Beadchip Array Platform Data
 GPLmeth2 = Table(GPLmeth2) #GoldenGate Methylation Array Platform Data 
