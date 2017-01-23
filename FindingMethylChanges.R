@@ -4,7 +4,7 @@ library(GEOquery)
 ## methylation datasets
 load("data/GSE37817.RData")
 load("data/GSE33510.RData")
-load("datax/GSE28094.RData")
+load("data/GSE28094.RData")
 
 ## methylation platforms
 load("data/GPL8490.RData")
