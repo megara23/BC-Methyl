@@ -2,13 +2,13 @@ library(limma)
 library(GEOquery)
 
 ## methylation datasets
-load("C:/Users/Windows User/Desktop/MethylMix/GSE37817.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GSE33510.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GSE28094.RData")
+load("data/GSE37817.RData")
+load("data/GSE33510.RData")
+load("datax/GSE28094.RData")
 
 ## methylation platforms
-load("C:/Users/Windows User/Desktop/MethylMix/GPL8490.RData")
-load("C:/Users/Windows User/Desktop/MethylMix/GPL9183.RData")
+load("data/GPL8490.RData")
+load("data/GPL9183.RData")
 
 getprobe = function()
 {
