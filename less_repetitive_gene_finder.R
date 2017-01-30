@@ -19,20 +19,18 @@ getgene = function()
   return(as.character(x))
 }
 
-gene = getgene() #Enter gene
-gene = paste0("^",gene,"$") 
-matching = grep(gene, GPLmeth$Symbol) #Match gene to gene name in platform data
-matching2 = grep(gene, GPLmeth2$Symbol)
-findprobe = GPLmeth$ID[matching] #Find probe(s) for gene
-findprobe2 = GPLmeth2$ID[matching]
-find = match(findprobe, rownames(GSE33510.meth)) #Match probe(s) to row(s) in patient dataset
-find2 = match(findprobe2, rownames(GSE33510.meth))
-findbestprobe = function(methyl, set, gettumornorm){
+findbestprobe = function(gene, GPL, X, Y){
+
+  gene = paste0("^",gene,"$")  
+  matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
+  findprobe = GPL$ID[matching] #Find probe(s) for gene
+  find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
+  
   newvector = c(1)
   i = 1
-  for (i in 1:length(methyl)) {
-    m = methyl[i]
-    s = split(set[m,], gettumornorm)
+  for (i in 1:length(find)) {
+    m = find[i]
+    s = split(X[m,], Y)
     boxplot(s, main = "Methylation", col = c("purple", "pink"), ylab = "Probe Expression")
     means = lapply(s, mean)
     meanchange = means[[1]] - means[[2]]
@@ -41,13 +39,18 @@ findbestprobe = function(methyl, set, gettumornorm){
     z = t.test(a,b)
     p_value= z$p.value
     print(2**meanchange) #Fold Change
-    newvector = append(newvector, p_value, after=length(newvector))
+    newvector = c(newvector, p_value)
+    
     print(newvector)
     }
   newvector = p.adjust(newvector, method = "fdr")
   which.min(newvector) 
   min(newvector)
 }
-findbestprobe(find, GSE37817.methyl, GSE37817.methyl.tumor)
-findbestprobe(find, GSE33510.meth, GSE33510.meth.tumor_normal)
-findbestprobe(find2, GSE28094.meth, GSE28094.methyl.tumor)
+
+
+gene = getgene() #Enter gene
+findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
+findbestprobe(gene, GPLmeth, GSE33510.meth, GSE33510.meth.tumor_normal)
+findbestprobe(gene, GPLmeth2, GSE28094.meth, GSE28094.methyl.tumor)
+
