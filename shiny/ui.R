@@ -5,7 +5,7 @@ shinyUI(
     sidebarLayout(      
       sidebarPanel(
         selectInput("Genes", "Gene:", 
-                    choices=GSE37817.methyl$Symbol[1:5]),
+                    choices=GPLmeth$Symbol[1:5]),
         hr(),
         
         selectInput("Color1", "1st Color:", 
@@ -14,7 +14,7 @@ shinyUI(
                     choices=choices)
       ),
       mainPanel(
-        plotOutput("ProbesPlot")  
+        plotOutput("GenesPlot")  
       )
     )
   )
