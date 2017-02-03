@@ -1,6 +1,7 @@
 
 # finds best probe for a given gene with platform GPL, 
 # methylation data X, and phenotypes in Y
+# TO DO: needs to handle case where gene is not found
 findbestprobe = function(gene, GPL, X, Y){
   gene = paste0("^",gene,"$")  
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
@@ -27,4 +28,17 @@ findbestprobe = function(gene, GPL, X, Y){
   newvector = p.adjust(newvector, method = "fdr")
   which.min(newvector) 
   min(newvector)
+}
+
+
+# evaluates differential methylation for paired (e.g., TCGA) data
+# function assumes rownames contain the genes
+# TO DO: needs to handle case where gene is not found
+evaluate.paired <- function(gene, X.tumor, X.normal) {
+  m = match(gene, rownames(X.tumor))
+  matplot(rbind(X.normal[m,],X.tumor[m,]), 
+          ylab = "Methylation (Beta value)", xaxt = "n", 
+          type = "b", pch = 19, col = 1, 
+          lty = 1, xlim = c(0.9, 2.1))
+          axis(1, at = 1:2, labels = c("Normal", "Tumor"))
 }
