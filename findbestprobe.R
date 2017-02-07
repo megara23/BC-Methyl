@@ -3,7 +3,7 @@
 # methylation data X, and phenotypes in Y
 # TO DO: needs to handle case where gene is not found
 findbestprobe = function(gene, GPL, X, Y){
-  gene = paste0("^",gene,"$")  
+  gene = paste0("^",gene,"$")
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
