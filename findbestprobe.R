@@ -13,7 +13,7 @@ findbestprobe = function(gene, GPL, X, Y){
   for (i in 1:length(find)) {
     m = find[i]
     s = split(X[m,], Y)
-    boxplot(s, main = "Methylation", col = c("purple", "pink"), ylab = "Probe Expression")
+    boxplot(s, main = "Methylation", col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
     means = lapply(s, mean)
     meanchange = means[[1]] - means[[2]]
     a = s[[1]]
