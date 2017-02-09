@@ -13,7 +13,9 @@ shinyUI(
     titlePanel("Methylation Expression"),
     sidebarLayout(      
       sidebarPanel(
-        selectInput("Genes", "Gene:", 
+        selectInput("Genes", "Gene 1:", 
+                    choices=GPLmeth$Symbol[1:5]),
+        selectInput("Genes2", "Gene 2:", 
                     choices=GPLmeth$Symbol[1:5]),
         hr(),
         
@@ -23,7 +25,8 @@ shinyUI(
                     choices=choices)
       ),
       mainPanel(
-        plotOutput("GenesPlot")  
+        plotOutput("GenesPlot"),
+        plotOutput("GenesPlot2")
       )
     )
   )

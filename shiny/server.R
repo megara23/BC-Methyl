@@ -15,5 +15,10 @@ shinyServer(function(input, output) {
    findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
   })
   
+  output$GenesPlot2 <- renderPlot({
+    gene = input$Genes2 
+    findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
+  })
+  
 })
  
