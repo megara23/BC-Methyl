@@ -28,7 +28,8 @@ X.normal = X.normal[,m1]
 X.tumor = X.tumor[,m2]
 
 # save the results
-TCGA.normal = X.normal
-TCGA.tumor = X.tumor
+TCGA.normal = apply(X.normal, 1:2, as.double)
+TCGA.tumor = apply(X.tumor, 1:2, as.double)
+
 save(TCGA.normal, TCGA.tumor, file = "TCGA.RData")
 
