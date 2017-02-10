@@ -3,7 +3,7 @@
 # methylation data X, and phenotypes in Y
 # TO DO: needs to handle case where gene is not found
 findbestprobe = function(gene, GPL, X, Y){
-  gene = paste0("^",gene,"$")  
+  gene = paste0("^",gene,"$")
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
@@ -13,7 +13,7 @@ findbestprobe = function(gene, GPL, X, Y){
   for (i in 1:length(find)) {
     m = find[i]
     s = split(X[m,], Y)
-    boxplot(s, main = "Methylation", col = c("purple", "pink"), ylab = "Probe Expression")
+    boxplot(s, main = "Differential Methylation Status Between Tumor and Normal Patients", col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
     means = lapply(s, mean)
     meanchange = means[[1]] - means[[2]]
     a = s[[1]]

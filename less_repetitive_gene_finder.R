@@ -21,9 +21,9 @@ getgene = function()
 }
 
 
-  gene = getgene() #Enter gene
-  findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
-  findbestprobe(gene, GPLmeth, GSE33510.meth, GSE33510.meth.tumor_normal)
-  findbestprobe(gene, GPLmeth2, GSE28094.meth, GSE28094.methyl.tumor)
+gene = getgene() #Enter gene
+findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
+findbestprobe(gene, GPLmeth, GSE33510.meth, GSE33510.meth.tumor_normal)
+findbestprobe(gene, GPLmeth2, GSE28094.meth, GSE28094.methyl.tumor)
   
   
