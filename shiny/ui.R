@@ -1,5 +1,6 @@
 setwd("C:/Users/Owner/Desktop/BC-Methyl/")
 load("data/GSE37817.RData")
+load("data/GSE33510.RData")
 load("data/GPL8490.RData")
 load("data/GPL9183.RData")
 source("findbestprobe.R")
