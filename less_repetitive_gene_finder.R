@@ -14,6 +14,11 @@ source("findbestprobe.R")
 GPLmeth = Table(GPLmeth) #Illumina HumanMethylation27 Beadchip Array Platform Data
 GPLmeth2 = Table(GPLmeth2) #GoldenGate Methylation Array Platform Data 
 
+#Dataset names 
+GSE37817.methyl = KRIBAB 
+GSE33510.meth = LUSUC
+GSE28094.meth = IUOPA
+
 getgene = function()
 {
   x = readline(prompt = "Enter a gene: ")
@@ -22,8 +27,7 @@ getgene = function()
 
 
 gene = getgene() #Enter gene
-findbestprobe(gene, GPLmeth, GSE37817.methyl, GSE37817.methyl.tumor)
-findbestprobe(gene, GPLmeth, GSE33510.meth, GSE33510.meth.tumor_normal)
-findbestprobe(gene, GPLmeth2, GSE28094.meth, GSE28094.methyl.tumor)
-  
+findbestprobe(gene, GPLmeth, KRIBAB, GSE37817.methyl.tumor)
+findbestprobe(gene, GPLmeth, LUSUC, GSE33510.meth.tumor_normal)
+findbestprobe(gene, GPLmeth2, IUOPA, GSE28094.methyl.tumor)
   

@@ -1,4 +1,4 @@
-load("C:/Users/Owner/Desktop/MethylMix/GSE37817.RData")
+load("data/GSE37817.RData")
 
 shinyServer(function(input, output) {
   output$ProbesPlot <- renderPlot({

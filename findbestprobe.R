@@ -13,21 +13,20 @@ findbestprobe = function(gene, GPL, X, Y){
   for (i in 1:length(find)) {
     m = find[i]
     s = split(X[m,], Y)
-    boxplot(s, main = "Differential Methylation Status Between Tumor and Normal Patients", col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
-    means = lapply(s, mean)
+    means = lapply(s, mean, na.rm = TRUE)
     meanchange = means[[1]] - means[[2]]
     a = s[[1]]
     b = s[[2]]
-    z = t.test(a,b)
+    z = t.test(a,b, na.rm = TRUE)
     p_value= z$p.value
-    print(2**meanchange) #Fold Change
+    FC = 2**meanchange #Fold Change
     newvector = c(newvector, p_value)
-    
     print(newvector)
   }
   newvector = p.adjust(newvector, method = "fdr")
   which.min(newvector) 
-  min(newvector)
+  FDR= newvector[i+1]
+  boxplot(s, main = paste(" FC = ", round(FC,2), "FDR = ", round(FDR,4), X), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
 }
 
 
