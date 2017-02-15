@@ -2,6 +2,7 @@ library(GEOquery)
 setwd("C:/Users/Owner/Desktop/BC-Methyl/")
 load("data/GSE37817.RData")
 load("data/GSE33510.RData")
+load("data/GSE28094.RData")
 load("data/GPL8490.RData")
 load("data/GPL9183.RData")
 source("findbestprobe.R")
@@ -19,6 +20,11 @@ shinyServer(function(input, output) {
   output$GenesPlot2 <- renderPlot({
     gene = input$Genes 
     findbestprobe(gene, GPLmeth, GSE33510.meth, GSE33510.meth.tumor_normal, "LU")
+  })
+  
+  output$GenesPlot3 <- renderPlot({
+    gene = input$Genes 
+    findbestprobe(gene, GPLmeth2, GSE28094.meth, GSE28094.methyl.tumor, "IUOPA")
   })
   
 })
