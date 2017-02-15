@@ -10,15 +10,15 @@ GPLmeth = Table(GPLmeth) #Illumina HumanMethylation27 Beadchip Array Platform Da
 GPLmeth2 = Table(GPLmeth2) #GoldenGate Methylation Array Platform Data 
 
 choices = c("red", "green", "blue", "purple", "orange")
+geneChoices = as.character(GPLmeth$Symbol[1:5])
+geneChoices = c(geneChoices, "Gene")
 shinyUI(
   fluidPage(
     titlePanel("Methylation Expression"),
     sidebarLayout(      
       sidebarPanel(
         selectInput("Genes", "Gene 1:", 
-                    choices=GPLmeth$Symbol[1:5]),
-        selectInput("Genes2", "Gene 2:", 
-                    choices=GPLmeth$Symbol[1:5]),
+                    choices=geneChoices),
         hr(),
         
         selectInput("Color1", "1st Color:", 
