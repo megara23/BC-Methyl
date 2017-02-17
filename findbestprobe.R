@@ -33,7 +33,14 @@ findbestprobe = function(gene, GPL, X, Y, title){
   newvector = p.adjust(newvector, method = "fdr")
   which.min(newvector) 
   FDR= newvector[i+1]
-  boxplot(s, main = paste(title, " FC = ", round(FC,2), "FDR = ", round(FDR,4)), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
+  if (FDR < 0.001){
+    FDR = "< 0.001"
+  }
+  else 
+  {
+    FDR = round(FDR, 3)
+  }
+  boxplot(s, main = paste(title, " FC = ", round(FC,2), "FDR = ", FDR), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
     }
   }
 }
