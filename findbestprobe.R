@@ -15,35 +15,39 @@ findbestprobe = function(gene, GPL, X, Y, title){
   for (i in 1:length(find)) {
     find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
     m = find[i]
-    if (is.na(X[m,] == TRUE)){
-      return(NULL)
-   } else {
     s = split(X[m,], Y)
-    means = lapply(s, mean, na.rm = TRUE)
+    s = lapply(s, na.omit)
+    means = lapply(s, mean)
     meanchange = means[[1]] - means[[2]]
     a = s[[1]]
     b = s[[2]]
-    z = t.test(a,b, na.rm =TRUE)
+    z = try(t.test(a,b), silent = TRUE)
+    if (is(z, "try-error")){
+      return(NULL)
+    }
     p_value= z$p.value
-    p_value =na.omit(p_value)
     FC = 2**meanchange #Fold Change
     newvector = c(newvector, p_value)
+    newvector = na.omit(newvector)
     print(newvector)
   }
   newvector = p.adjust(newvector, method = "fdr")
   which.min(newvector) 
   FDR= newvector[i+1]
-  if (FDR < 0.001){
+  if (FDR < 0.001 & FDR > 0 ){
     FDR = "< 0.001"
   }
-  else 
+  else if (FDR > 0.001 | FDR == 0.001)
   {
     FDR = round(FDR, 3)
+  }
+  else (any(is.na(FDR)))
+  {
+    FDR = "NA"
   }
   boxplot(s, main = paste(title, " FC = ", round(FC,2), "FDR = ", FDR), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
     }
   }
-}
 
 # evaluates differential methylation for paired (e.g., TCGA) data
 # function assumes rownames contain the genes
