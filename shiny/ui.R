@@ -24,9 +24,11 @@ shinyUI(
       ),
       mainPanel(
       fluidRow(
+        column(4, plotOutput("SummaryPlot")),
         column(4, plotOutput("GenesPlot")),
         column(4, plotOutput("GenesPlot2")),
-        column(4, plotOutput("GenesPlot3"))
+        column(4, plotOutput("GenesPlot3")),
+        column(4, plotOutput("GenesPlot4"))
         )
       )
     )
