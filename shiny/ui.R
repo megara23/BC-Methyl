@@ -5,15 +5,18 @@ load("data/GSE33510.RData")
 load("data/GSE28094.RData")
 load("data/GPL8490.RData")
 load("data/GPL9183.RData")
+load("data/TCGA.RData")
 source("findbestprobe.R")
 
 GPLmeth = Table(GPLmeth) #Illumina HumanMethylation27 Beadchip Array Platform Data
 GPLmeth2 = Table(GPLmeth2) #GoldenGate Methylation Array Platform Data 
 
 choices = c("red", "green", "blue", "purple", "orange")
-geneChoices = as.character(GPLmeth$Symbol)
-geneChoices2 = as.character(GPLmeth2$Symbol)
-geneChoices = c(geneChoices, geneChoices2, "Gene")
+geneChoices = unique(as.character(GPLmeth$Symbol))
+geneChoices2 = unique(as.character(GPLmeth2$Symbol))
+geneChoices = sort(unique(c(geneChoices, as.character(rownames(TCGA.tumor)), geneChoices2)))
+geneChoices = geneChoices[geneChoices!=""]
+
 shinyUI(
   fluidPage(
     titlePanel("Methylation Expression"),
@@ -27,8 +30,10 @@ shinyUI(
         column(4, plotOutput("SummaryPlot")),
         column(4, plotOutput("GenesPlot")),
         column(4, plotOutput("GenesPlot2")),
+        column(2),
         column(4, plotOutput("GenesPlot3")),
-        column(4, plotOutput("GenesPlot4"))
+        column(4, plotOutput("GenesPlot4")),
+        column(2)
         )
       )
     )

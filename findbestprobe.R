@@ -1,4 +1,3 @@
-
 # finds best probe for a given gene with platform GPL, 
 # methylation data X, and phenotypes in Y
 # TO DO: needs to handle case where gene is not found
@@ -10,7 +9,8 @@ findbestprobe = function(gene, GPL, X, Y, title){
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   i = 1
  if (length(matching) == 0){
-   return(NULL)
+   plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+   legend("center", "Gene not found", bty = "n", cex = 1.5)
  }else{
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
@@ -32,7 +32,6 @@ findbestprobe = function(gene, GPL, X, Y, title){
     
   }
   newvector = p.adjust(newvector, method = "fdr")
-  
   cat("FDR values=")
   print(newvector)
   
@@ -58,11 +57,13 @@ findbestprobe = function(gene, GPL, X, Y, title){
   file = paste0(title, ".RData")
   
   # the ith probe is the best probe
-    #print(s_best)
   save(s_best, i, find, X, m_best, file = file)
+  if (is.null(s_best) == TRUE)
+  {
+  } else{
     boxplot(s_best, main = paste(title, " FC = ", round(FC,2), "FDR = ", FDR), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
 
-  
+  }
       }
   }
 
@@ -72,7 +73,8 @@ findbestprobe = function(gene, GPL, X, Y, title){
 evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   m = match(gene, rownames(X.tumor))
   if (length(m) == 0){
-    return(NULL)
+    plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+    legend("center", "Gene not found", bty = "n", cex = 1.5)
   }else{
   matplot(rbind(X.normal[m,],X.tumor[m,]), 
           main = title, ylab = "Methylation (Beta value)", xaxt = "n", 
