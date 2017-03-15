@@ -70,6 +70,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
   FDR= newvector[i]
   FDR = formatFDR(FDR) 
   if (length(find)==1){
+    pvaltitle = "(p-value = "}
   else{
     pvaltitle = "(FDR = "
   }
