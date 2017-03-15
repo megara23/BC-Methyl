@@ -96,7 +96,7 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   title = paste(title, "\nFC = ", round(FC,2), "(P = ", p, ")")
   setMargins()
   matplot(rbind(X.normal[m,],X.tumor[m,]), 
-          main = title, ylab = "Methylation (Beta value)", xaxt = "n", 
+          main = title, ylab = "Beta value", xaxt = "n", 
           type = "b", pch = 19, col = 1, 
           lty = 1, xlim = c(0.9, 2.1), ylim = c(0, 1))
           axis(1, at = 1:2, labels = c("Normal", "Tumor"))
