@@ -70,7 +70,6 @@ findbestprobe = function(gene, GPL, X, Y, title){
   meanchange = means[[2]] / means[[1]]
   FC = meanchange #Fold Change
   FDR= newvector[i]
-<<<<<<< 912070ec4098d5c086e5f2667eefd2e1fc45a243
   FDR = formatFDR(FDR) 
   if (length(find)==1){
     pvaltitle = "(p-value = "}
@@ -83,7 +82,13 @@ findbestprobe = function(gene, GPL, X, Y, title){
     boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
   }
       }
-=======
+  cat("Final FDR is ", FDR, "\n")
+ 
+  strFDR = formatFDR(FDR) 
+  
+  # the ith probe is the best probe
+  if (!is.null(s_best)) {
+    setMargins()
   cat("Final FDR is ", FDR, "\n")
  
   strFDR = formatFDR(FDR) 
@@ -95,7 +100,6 @@ findbestprobe = function(gene, GPL, X, Y, title){
             ylim = c(0,1))
     results = list(FC = FC, FDR = FDR)
     return (results)
->>>>>>> Added summary plot, use yaxis range of (0,1) for all datasets
   }
  }
 }
