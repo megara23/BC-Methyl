@@ -70,22 +70,20 @@ findbestprobe = function(gene, GPL, X, Y, title){
   meanchange = means[[2]] / means[[1]]
   FC = meanchange #Fold Change
   FDR= newvector[i]
-  FDR = formatFDR(FDR) 
+  strFDR = formatFDR(FDR) 
   if (length(find)==1){
-    pvaltitle = "(p-value = "}
+    pvaltitle = "(P"}
   else{
-    pvaltitle = "(FDR = "
+    pvaltitle = "(FDR"
   }
   # the ith probe is the best probe
   if (!is.null(s_best)) {
     setMargins()
-    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
+    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, strFDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
   }
       }
   cat("Final FDR is ", FDR, "\n")
  
-  strFDR = formatFDR(FDR) 
-  
   # the ith probe is the best probe
   if (!is.null(s_best)) {
     setMargins()
