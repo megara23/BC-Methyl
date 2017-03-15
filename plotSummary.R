@@ -15,11 +15,11 @@ summarizeOne <- function(x) {
   }
   if (x$FC > 1 & x$FDR < 0.05) {
     return(1)
-  } else if (x$FC > 1) {
+  } else if (x$FC > 1 & x$FDR > 0.05) {
     return(2)
   } else if (x$FC < 1 & x$FDR > 0.05) {
     return(3)
-  } else if (x$FC < 1) {
+  } else if (x$FC < 1 & x$FDR < 0.05) {
     return(4)
   } 
   return(NULL)

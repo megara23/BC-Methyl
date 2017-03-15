@@ -23,7 +23,7 @@ shinyUI(
     sidebarLayout(      
       sidebarPanel(width = 2,
         selectInput("Genes", "Select a gene:", 
-                    choices=geneChoices, selected = "FGFR3")
+                    choices=geneChoices)
       ),
       mainPanel(
       fluidRow(

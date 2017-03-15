@@ -51,7 +51,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
     b = s[[2]]
     z = try(t.test(a,b), silent = TRUE)
     if (is(z, "try-error")){
-      return(NULL)
+      return( plotGeneNotFound())
     }
     p_value= z$p.value
     newvector = c(newvector, p_value)
