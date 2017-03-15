@@ -21,19 +21,23 @@ shinyUI(
   fluidPage(
     titlePanel("Methylation Expression"),
     sidebarLayout(      
-      sidebarPanel(
-        selectInput("Genes", "Gene 1:", 
+      sidebarPanel(width = 2,
+        selectInput("Genes", "Select a gene:", 
                     choices=geneChoices)
       ),
       mainPanel(
       fluidRow(
-        column(4, plotOutput("SummaryPlot")),
-        column(4, plotOutput("GenesPlot")),
-        column(4, plotOutput("GenesPlot2")),
+        column(4, plotOutput("SummaryPlot", height = 300)),
+        column(4, plotOutput("GenesPlot", height = 300)),
+        column(4, plotOutput("GenesPlot2", height = 300))
+        ),
+      fluidRow(
         column(2),
-        column(4, plotOutput("GenesPlot3")),
-        column(4, plotOutput("GenesPlot4")),
+        column(4, plotOutput("GenesPlot3", height = 300)),
+        column(4, plotOutput("GenesPlot4", height = 300)),
         column(2)
+        
+        
         )
       )
     )

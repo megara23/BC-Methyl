@@ -14,6 +14,7 @@ GPLmeth2 = Table(GPLmeth2) #GoldenGate Methylation Array Platform Data
 shinyServer(function(input, output) {
   
   output$SummaryPlot <- renderPlot({
+    setMargins()
     boxplot(c(1:10), main = paste("Summary Plot"))
   })
   
@@ -34,7 +35,7 @@ shinyServer(function(input, output) {
   
   output$GenesPlot4 <- renderPlot({
     gene = input$Genes 
-    evaluate.paired(gene, TCGA.tumor, TCGA.normal, "TCGA Bladder")
+    evaluate.paired(gene, TCGA.tumor, TCGA.normal, "TCGA")
   })
   
  })
