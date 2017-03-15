@@ -38,6 +38,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
  }else{
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
+  length = length(find)
   newvector = NULL
   for (i in 1:length(find)) {
     find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
@@ -67,14 +68,15 @@ findbestprobe = function(gene, GPL, X, Y, title){
   meanchange = means[[2]] / means[[1]]
   FC = meanchange #Fold Change
   FDR= newvector[i]
-  cat("Final FDR is ", FDR, "\n")
- 
   FDR = formatFDR(FDR) 
-  
+  if (length(find)==1){
+  else{
+    pvaltitle = "(FDR = "
+  }
   # the ith probe is the best probe
   if (!is.null(s_best)) {
     setMargins()
-    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), "(FDR = ", FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
+    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
   }
       }
   }
