@@ -1,3 +1,28 @@
+# function to format the FDR (or p-value)
+formatFDR <- function(FDR) {
+  if (FDR < 0.001 & FDR > 0 ){
+    FDR = "< 0.001"
+  }
+  else if (FDR > 0.001 | FDR == 0.001)
+  {
+    FDR = round(FDR, 3)
+  }
+  return (FDR)
+}
+# reduces margins
+setMargins <-function() {
+  # sets bottom, left, top, and right margins
+  par(mar = c(3, 3.7, 3, 1) + 0.1)
+}
+# function to create plot when gene is not found
+plotGeneNotFound <-function() {
+  setMargins()
+  plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+  #legend("center", "Gene not found", bty = "n", cex = 1.5)  
+  text(1.5, .5, "Gene not found", cex = 1.5)
+}
+
+
 # finds best probe for a given gene with platform GPL, 
 # methylation data X, and phenotypes in Y
 # TO DO: needs to handle case where gene is not found
@@ -9,8 +34,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   i = 1
  if (length(matching) == 0){
-   plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
-   legend("center", "Gene not found", bty = "n", cex = 1.5)
+   plotGeneNotFound()
  }else{
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
@@ -40,29 +64,17 @@ findbestprobe = function(gene, GPL, X, Y, title){
   s_best = split(X[m_best,], Y)
   s_best = lapply(s_best, na.omit)
   means = lapply(s_best, mean)
-  meanchange = means[[1]] - means[[2]]
-  FC = 2**meanchange #Fold Change
+  meanchange = means[[2]] / means[[1]]
+  FC = meanchange #Fold Change
   FDR= newvector[i]
   cat("Final FDR is ", FDR, "\n")
-  
-  if (FDR < 0.001 & FDR > 0 ){
-    FDR = "< 0.001"
-  }
-  else if (FDR > 0.001 | FDR == 0.001)
-  {
-    FDR = round(FDR, 3)
-  }
-  
-  
-  file = paste0(title, ".RData")
+ 
+  FDR = formatFDR(FDR) 
   
   # the ith probe is the best probe
-  save(s_best, i, find, X, m_best, file = file)
-  if (is.null(s_best) == TRUE)
-  {
-  } else{
-    boxplot(s_best, main = paste(title, " FC = ", round(FC,2), "FDR = ", FDR), col = c("purple", "pink"), ylab = "Beta Value", names = c("normal", "bladder cancer"))
-
+  if (!is.null(s_best)) {
+    setMargins()
+    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), "(FDR = ", FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
   }
       }
   }
@@ -72,12 +84,19 @@ findbestprobe = function(gene, GPL, X, Y, title){
 # TO DO: needs to handle case where gene is not found
 evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   m = match(gene, rownames(X.tumor))
-  if (length(m) == 0){
-    plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
-    legend("center", "Gene not found", bty = "n", cex = 1.5)
+  if (is.na(m)){
+   plotGeneNotFound()
   }else{
+
+  t = t.test(X.normal[m,], X.tumor[m,], paired = TRUE) 
+
+  p = formatFDR(t$p.value)
+  FC = mean(X.normal[m,] / X.tumor[m,])
+
+  title = paste(title, "\nFC = ", round(FC,2), "(P = ", p, ")")
+  setMargins()
   matplot(rbind(X.normal[m,],X.tumor[m,]), 
-          main = title, ylab = "Methylation (Beta value)", xaxt = "n", 
+          main = title, ylab = "Beta value", xaxt = "n", 
           type = "b", pch = 19, col = 1, 
           lty = 1, xlim = c(0.9, 2.1), ylim = c(0, 1))
           axis(1, at = 1:2, labels = c("Normal", "Tumor"))
