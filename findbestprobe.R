@@ -1,18 +1,19 @@
 # function to format the FDR (or p-value)
 formatFDR <- function(FDR) {
   if (FDR < 0.001 & FDR > 0 ){
-    FDR = "< 0.001"
+    FDR = "<0.001"
   }
   else if (FDR > 0.001 | FDR == 0.001)
   {
     FDR = round(FDR, 3)
+    FDR = paste0("=", FDR)
   }
   return (FDR)
 }
 # reduces margins
 setMargins <-function() {
   # sets bottom, left, top, and right margins
-  par(mar = c(3, 3.7, 3, 1) + 0.1)
+  par(mar = c(3, 3.7, 3, .5) + 0.1)
 }
 # function to create plot when gene is not found
 plotGeneNotFound <-function() {
@@ -35,6 +36,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
   i = 1
  if (length(matching) == 0){
    plotGeneNotFound()
+   return(NULL)
  }else{
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
@@ -80,7 +82,27 @@ findbestprobe = function(gene, GPL, X, Y, title){
     boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, FDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
   }
       }
+  cat("Final FDR is ", FDR, "\n")
+ 
+  strFDR = formatFDR(FDR) 
+  
+  # the ith probe is the best probe
+  if (!is.null(s_best)) {
+    setMargins()
+  cat("Final FDR is ", FDR, "\n")
+ 
+  strFDR = formatFDR(FDR) 
+  
+  # the ith probe is the best probe
+  if (!is.null(s_best)) {
+    setMargins()
+    boxplot(s_best, main = paste0(title, "\nFC=", round(FC,2), " (FDR", strFDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"),
+            ylim = c(0,1))
+    results = list(FC = FC, FDR = FDR)
+    return (results)
   }
+ }
+}
 
 # evaluates differential methylation for paired (e.g., TCGA) data
 # function assumes rownames contain the genes
@@ -89,14 +111,15 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   m = match(gene, rownames(X.tumor))
   if (is.na(m)){
    plotGeneNotFound()
+   return(NULL)
   }else{
 
   t = t.test(X.normal[m,], X.tumor[m,], paired = TRUE) 
 
-  p = formatFDR(t$p.value)
-  FC = mean(X.normal[m,] / X.tumor[m,])
+  strP = formatFDR(t$p.value)
+  FC = mean(X.tumor[m,] / X.normal[m,])
 
-  title = paste(title, "\nFC = ", round(FC,2), "(P = ", p, ")")
+  title = paste0(title, "\nFC=", round(FC,2), " (P", strP, ")")
   setMargins()
   matplot(rbind(X.normal[m,],X.tumor[m,]), 
           main = title, ylab = "Beta value", xaxt = "n", 
@@ -104,4 +127,6 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
           lty = 1, xlim = c(0.9, 2.1), ylim = c(0, 1))
           axis(1, at = 1:2, labels = c("Normal", "Tumor"))
   }
+  results = list(FC = FC, FDR = t$p.value)
+  return (results)
 }
