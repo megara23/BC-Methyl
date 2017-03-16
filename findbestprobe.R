@@ -28,15 +28,15 @@ plotGeneNotFound <-function(title) {
 # finds best probe for a given gene with platform GPL, 
 # methylation data X, and phenotypes in Y
 # TO DO: needs to handle case where gene is not found
-findbestprobe = function(gene, GPL, X, Y, title){
+findbestprobe = function(gene, GPL, X, Y, title, plot.best = TRUE){
 
   gene = paste0("^",gene,"$")
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   i = 1
- if (length(matching) == 0){
-   plotGeneNotFound(title)
-   return(NULL)
- }else{
+  if (length(matching) == 0){
+    if (plot.best) plotGeneNotFound(title)
+    return(NULL)
+  }
   findprobe = GPL$ID[matching] #Find probe(s) for gene
   find = match(findprobe, rownames(X)) #Match probe(s) to row(s) in patient dataset
   length = length(find)
@@ -50,7 +50,8 @@ findbestprobe = function(gene, GPL, X, Y, title){
     b = s[[2]]
     z = try(t.test(a,b), silent = TRUE)
     if (is(z, "try-error")){
-      return( plotGeneNotFound(title))
+      if (plot.best) plotGeneNotFound(title)
+      return(NULL)
     }
     p_value= z$p.value
     newvector = c(newvector, p_value)
@@ -59,7 +60,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
   
   numFound = sum(!is.na(newvector))
   if (numFound == 0) {
-    plotGeneNotFound(title)
+    if (plot.best) plotGeneNotFound(title)
     return()
   }
   newvector = p.adjust(newvector, method = "fdr")
@@ -78,45 +79,29 @@ findbestprobe = function(gene, GPL, X, Y, title){
   FDR= newvector[i]
   strFDR = formatFDR(FDR) 
   if (numFound==1){
-    pvaltitle = "(P"}
-  else{
+    pvaltitle = "(P"
+  } else{
     pvaltitle = "(FDR"
   }
+  results = list(FC = FC, FDR = FDR)
   # the ith probe is the best probe
-  if (!is.null(s_best)) {
-    setMargins()
-    boxplot(s_best, main = paste(title, "\nFC = ", round(FC,2), pvaltitle, strFDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"))
-  }
-      }
-  cat("Final FDR is ", FDR, "\n")
- 
-  # the ith probe is the best probe
-  if (!is.null(s_best)) {
-    setMargins()
-  cat("Final FDR is ", FDR, "\n")
- 
-  strFDR = formatFDR(FDR) 
-  
-  # the ith probe is the best probe
-  if (!is.null(s_best)) {
+  if (!is.null(s_best) & plot.best) {
     setMargins()
     boxplot(s_best, main = paste0(title, "\nFC=", round(FC,2), " (FDR", strFDR, ")"), col = c("purple", "pink"), ylab = "Beta Value", names = c("Normal", "Tumor"),
             ylim = c(0,1))
-    results = list(FC = FC, FDR = FDR)
-    return (results)
   }
- }
+  return (results)
 }
 
 # evaluates differential methylation for paired (e.g., TCGA) data
 # function assumes rownames contain the genes
 # TO DO: needs to handle case where gene is not found
-evaluate.paired <- function(gene, X.tumor, X.normal, title) {
+evaluate.paired <- function(gene, X.tumor, X.normal, title, plot.best = TRUE) {
   m = match(gene, rownames(X.tumor))
   if (is.na(m)){
    plotGeneNotFound(title)
    return(NULL)
-  }else{
+  }
 
   t = t.test(X.normal[m,], X.tumor[m,], paired = TRUE) 
 
@@ -124,9 +109,10 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   FC = mean(X.tumor[m,] / X.normal[m,])
   if (is.nan(FC)) FC = 1
   
-  title = paste0(title, "\nFC=", round(FC,2), " (P", strP, ")")
-  setMargins()
-  matplot(rbind(X.normal[m,],X.tumor[m,]), 
+  if (plot.best) {
+    title = paste0(title, "\nFC=", round(FC,2), " (P", strP, ")")
+    setMargins()
+    matplot(rbind(X.normal[m,],X.tumor[m,]), 
           main = title, ylab = "Beta value", xaxt = "n", 
           type = "b", pch = 19, col = 1, 
           lty = 1, xlim = c(0.9, 2.1), ylim = c(0, 1))
@@ -135,3 +121,4 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   results = list(FC = FC, FDR = t$p.value)
   return (results)
 }
+  
