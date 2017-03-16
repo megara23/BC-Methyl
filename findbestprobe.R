@@ -16,11 +16,12 @@ setMargins <-function() {
   par(mar = c(3, 3.7, 3, .5) + 0.1)
 }
 # function to create plot when gene is not found
-plotGeneNotFound <-function() {
+plotGeneNotFound <-function(title) {
   setMargins()
-  plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "")
+  plot(c(0,1), type = "n", xaxt = "n", yaxt = "n", ylab = "", xlab = "",
+       main = paste0("\n",title))
   #legend("center", "Gene not found", bty = "n", cex = 1.5)  
-  text(1.5, .5, "Gene not found", cex = 1.5)
+  text(1.5, .5, "Methylation data\nunavailable", cex = 1.5)
 }
 
 
@@ -29,13 +30,11 @@ plotGeneNotFound <-function() {
 # TO DO: needs to handle case where gene is not found
 findbestprobe = function(gene, GPL, X, Y, title){
 
-  cat("analyzing, ", title, "\n")
-  
   gene = paste0("^",gene,"$")
   matching = grep(gene, GPL$Symbol) #Match gene to gene name in platform data
   i = 1
  if (length(matching) == 0){
-   plotGeneNotFound()
+   plotGeneNotFound(title)
    return(NULL)
  }else{
   findprobe = GPL$ID[matching] #Find probe(s) for gene
@@ -51,27 +50,34 @@ findbestprobe = function(gene, GPL, X, Y, title){
     b = s[[2]]
     z = try(t.test(a,b), silent = TRUE)
     if (is(z, "try-error")){
-      return( plotGeneNotFound())
+      return( plotGeneNotFound(title))
     }
     p_value= z$p.value
     newvector = c(newvector, p_value)
-    newvector = na.omit(newvector)
-    
+    #newvector = na.omit(newvector)
+  }
+  
+  numFound = sum(!is.na(newvector))
+  if (numFound == 0) {
+    plotGeneNotFound(title)
+    return()
   }
   newvector = p.adjust(newvector, method = "fdr")
-  cat("FDR values=")
-  print(newvector)
-  
+
   i = which.min(newvector) 
   m_best = find[i]
   s_best = split(X[m_best,], Y)
   s_best = lapply(s_best, na.omit)
+
+  # calculate FC, if NaN, then we have 0/0
   means = lapply(s_best, mean)
   meanchange = means[[2]] / means[[1]]
   FC = meanchange #Fold Change
+  if (is.nan(FC)) FC = 1
+  
   FDR= newvector[i]
   strFDR = formatFDR(FDR) 
-  if (length(find)==1){
+  if (numFound==1){
     pvaltitle = "(P"}
   else{
     pvaltitle = "(FDR"
@@ -108,7 +114,7 @@ findbestprobe = function(gene, GPL, X, Y, title){
 evaluate.paired <- function(gene, X.tumor, X.normal, title) {
   m = match(gene, rownames(X.tumor))
   if (is.na(m)){
-   plotGeneNotFound()
+   plotGeneNotFound(title)
    return(NULL)
   }else{
 
@@ -116,7 +122,8 @@ evaluate.paired <- function(gene, X.tumor, X.normal, title) {
 
   strP = formatFDR(t$p.value)
   FC = mean(X.tumor[m,] / X.normal[m,])
-
+  if (is.nan(FC)) FC = 1
+  
   title = paste0(title, "\nFC=", round(FC,2), " (P", strP, ")")
   setMargins()
   matplot(rbind(X.normal[m,],X.tumor[m,]), 
