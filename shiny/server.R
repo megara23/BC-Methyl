@@ -1,6 +1,5 @@
 library(GEOquery)
 library(ggplot2)
-setwd("C:/Users/Owner/Desktop/BC-Methyl/")
 load("data/GSE37817.RData")
 load("data/GSE33510.RData")
 load("data/GSE28094.RData")

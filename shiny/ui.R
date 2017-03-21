@@ -1,5 +1,4 @@
 library(GEOquery)
-setwd("C:/Users/Owner/Desktop/BC-Methyl/")
 load("data/GSE37817.RData")
 load("data/GSE33510.RData")
 load("data/GSE28094.RData")
@@ -20,7 +19,7 @@ shinyUI(
     sidebarLayout(      
       sidebarPanel(width = 2,
         selectInput("Genes", "Select a gene:", 
-                    choices=geneChoices)
+                    choices=geneChoices, selected = "FGFR3")
       ),
       mainPanel(
       fluidRow(
