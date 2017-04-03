@@ -15,7 +15,7 @@ geneChoices = geneChoices[geneChoices!=""]
 
 shinyUI(
   fluidPage(
-    titlePanel("BC-BET: Methylation Biomarker Evaluationn"),
+    titlePanel("BC-BET: Methylation Biomarker Evaluation"),
     hr(),
     sidebarLayout(      
       sidebarPanel(width = 2,
