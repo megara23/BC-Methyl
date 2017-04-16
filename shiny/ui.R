@@ -15,11 +15,16 @@ geneChoices = geneChoices[geneChoices!=""]
 
 shinyUI(
   fluidPage(
-    titlePanel("Methylation Expression"),
+    titlePanel("BC-BET: Methylation Biomarker Evaluation"),
+    hr(),
     sidebarLayout(      
       sidebarPanel(width = 2,
         selectInput("Genes", "Select a gene:", 
-                    choices=geneChoices, selected = "FGFR3")
+                    choices=geneChoices, selected = "FGFR3"),
+
+	hr(),
+	HTML("<b> Gene Discovery: </b></br>"),
+	HTML("<a href = \"https://github.com/gdancik/BC-Methyl/blob/master/geneList_fdr10.xlsx?raw=true\">Download Table </a>") 
       ),
       mainPanel(
       fluidRow(
